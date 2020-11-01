@@ -126,38 +126,55 @@ You'll get ~ the following answers:
 
 
 ### create WordOps directories
-`mkdir -p /var/log/wo /var/lib/wo/tmp /var/lib/wo-backup`
+```
+mkdir -p /var/log/wo /var/lib/wo/tmp /var/lib/wo-backup
+```
 
 
 ### Install acme.sh
 
-*clone the repository*
-`git clone https://github.com/Neilpang/acme.sh.git /opt/acme.sh -q`
+clone the repository
+```
+git clone https://github.com/Neilpang/acme.sh.git /opt/acme.sh -q
+```
 
-*create conf directory*
-`mkdir -p /etc/letsencrypt/{config,live,renewal}`
+create conf directory
+```
+mkdir -p /etc/letsencrypt/{config,live,renewal}
+```
 
-*install acme.sh*
-`cd /opt/acme.sh
-./acme.sh --install`
+install acme.sh
+```
+cd /opt/acme.sh
+./acme.sh --install
+```
 
-*enable auto-upgrade*
-`/etc/letsencrypt/acme.sh --config-home '/etc/letsencrypt/config' --upgrade --auto-upgrade`
+enable auto-upgrade
+```
+/etc/letsencrypt/acme.sh --config-home '/etc/letsencrypt/config' --upgrade --auto-upgrade
+```
 
-*create .well-known directory*
-`mkdir -p /var/www/html/.well-known/acme-challenge`
+create .well-known directory
+```
+mkdir -p /var/www/html/.well-known/acme-challenge
+```
 
-*set www-data as owner*
-`chown -R www-data:www-data /var/www/html /var/www/html/.well-known`
+set www-data as owner
+```
+chown -R www-data:www-data /var/www/html /var/www/html/.well-known
+```
 
-*set permissions*
-`chmod 750 /var/www/html /var/www/html/.well-known`
+set permissions
+```
+chmod 750 /var/www/html /var/www/html/.well-known
+```
 
 After you'll create your website, run `sudo -E wo site update your_website_address --le --force` this will install the Let's Encrypt SSL.
 
-
 ### Let's create a website
-`wo site create your_website_address --wpfc`
+```
+wo site create your_website_address --wpfc
+```
 
 * Running pre-update checks       [OK]
 * Setting up NGINX configuration 	[Done]
@@ -174,16 +191,18 @@ After you'll create your website, run `sudo -E wo site update your_website_addre
 * Successfully created site `your_website_address`
 
 ### Allow remote access to MySQL
-`nano /etc/wo/wo.conf` and change the value for `grant-host` from localhost to `%` 
+```
+nano /etc/wo/wo.conf
+```
+and change the value for `grant-host` from localhost to `%` 
 
 ### TWEEKS WP-CONFIG 
 
-`define( 'WP_HOME', 'your_website_address' );
+```
+define( 'WP_HOME', 'your_website_address' );
 define( 'WP_SITEURL', 'your_website_address' );
-
 define('WP_DEBUG', false);
 define('WP_DEBUG_DISPLAY', false);
-
 define('WP_MEMORY_LIMIT', '256M');
 define('WP_MAX_MEMORY_LIMIT', '1024M');
 define('CONCATENATE_SCRIPTS', false);
@@ -196,40 +215,51 @@ define('DISALLOW_FILE_EDIT', true);
 define('FS_METHOD', 'ssh2');
 define('WP_AUTO_UPDATE_CORE', true);
 add_filter('auto_update_plugin', '__return_false');
-add_filter('auto_update_theme', '__return_false');`
+add_filter('auto_update_theme', '__return_false');
+```
 
 ### Add extra MySQL username
 
-`mysql
+```
+mysql
 SELECT User,Host FROM mysql.user;
 CREATE USER 'your_username'@'localhost' IDENTIFIED BY 'your_password';
-GRANT ALL PRIVILEGES ON *.* TO 'your_username'@'localhost';`
+GRANT ALL PRIVILEGES ON *.* TO 'your_username'@'localhost';
+```
 
 ### Install Grafana
 
 To install the latest OSS release:
 
-`sudo apt-get install -y apt-transport-https
+```
+sudo apt-get install -y apt-transport-https
 sudo apt-get install -y software-properties-common wget
-wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -`
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+```
 
 Add this repository for stable releases:
 
-`echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list`
+```
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+```
 
 After you add the repository:
 
-`sudo apt-get update
-sudo apt-get install grafana`
+```
+sudo apt-get update
+sudo apt-get install grafana
+```
 
 Configure the Grafana server to start at boot:
 
-`sudo systemctl enable grafana-server.service`
+```sudo systemctl enable grafana-server.service```
 
 To start the service and verify that the service has started:
 
-`sudo service grafana-server start
-sudo service grafana-server status`
+```
+sudo service grafana-server start
+sudo service grafana-server status
+```
 
 *LOGIN: http://your_ip_address:3000/login
 admin / admin (but change the password at your first login*
